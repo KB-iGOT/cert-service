@@ -33,6 +33,10 @@ public class CloudStorage {
             String storageKey = System.getenv("cert_aws_storage_key");
             String storageSecret = System.getenv("cert_aws_storage_secret");
             storageService = StorageServiceFactory.getStorageService(new StorageConfig(cloudStoreType, storageKey, storageSecret));
+        } else if (StringUtils.equalsIgnoreCase(cloudStoreType, "cephs3")) {
+            String storageKey = System.getenv("cert_cephs3_storage_key");
+            String storageSecret = System.getenv("cert_cephs3_storage_secret");
+            storageService = StorageServiceFactory.getStorageService(new StorageConfig(cloudStoreType, storageKey, storageSecret));
         } else try {
             throw new Exception("ERR_INVALID_CLOUD_STORAGE Error while initialising cloud storage");
         } catch (Exception e) {

@@ -28,6 +28,9 @@ public class QRStorageParams {
             if (type.equals(JsonKey.AWS)) {
                 storeParams.put(JsonKey.AWS, getAwsParams());
             }
+            if (type.equals(JsonKey.CEPHS3)) {
+                storeParams.put(JsonKey.CEPHS3, getCephs3Params());
+            }
         }
         return storeParams;
     }
@@ -45,6 +48,14 @@ public class QRStorageParams {
         awsParams.put(JsonKey.containerName, System.getenv(JsonKey.PUBLIC_CONTAINER_NAME));
         awsParams.put(JsonKey.ACCOUNT, System.getenv(JsonKey.PUBLIC_AWS_STORAGE_KEY));
         awsParams.put(JsonKey.KEY, System.getenv(JsonKey.PUBLIC_AWS_STORAGE_SECRET));
+        return awsParams;
+    }
+
+    rivate Map<String, String> getCephs3Params() {
+        Map<String, String> awsParams = new HashMap<>();
+        awsParams.put(JsonKey.containerName, System.getenv(JsonKey.PUBLIC_CONTAINER_NAME));
+        awsParams.put(JsonKey.ACCOUNT, System.getenv(JsonKey.PUBLIC_CEPHS3_STORAGE_KEY));
+        awsParams.put(JsonKey.KEY, System.getenv(JsonKey.PUBLIC_CEPHS3_STORAGE_SECRET));
         return awsParams;
     }
 }
