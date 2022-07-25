@@ -51,7 +51,7 @@ public class QRStorageParams {
         return awsParams;
     }
 
-    rivate Map<String, String> getCephs3Params() {
+    private Map<String, String> getCephs3Params() {
         Map<String, String> awsParams = new HashMap<>();
         awsParams.put(JsonKey.containerName, System.getenv(JsonKey.PUBLIC_CONTAINER_NAME));
         awsParams.put(JsonKey.ACCOUNT, System.getenv(JsonKey.PUBLIC_CEPHS3_STORAGE_KEY));
