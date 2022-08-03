@@ -103,7 +103,15 @@ public class CertificateGeneratorActor extends BaseActor {
 
 
     private BaseStorageService getStorageService() {
-        StorageConfig storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAzureStorageKey(), certVar.getAzureStorageSecret());
+        StorageConfig storageConfig = null;
+        if (certVar.getCloudStorageType().equalsIgnoreCase(certVar.getAzureStorage())) {
+            storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAzureStorageKey(), certVar.getAzureStorageSecret());
+        } else if(certVar.getCloudStorageType().equalsIgnoreCase(certVar.getAwsStorage())){
+            storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAwsStorageKey(), certVar.getAwsStorageSecret());
+        } else {
+            storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getCephs3StorageKey(), certVar.getCephs3StorageSecret());
+        } 
+        //StorageConfig storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAzureStorageKey(), certVar.getAzureStorageSecret());
         logger.info(null, "CertificateGeneratorActor:getStorageService:storage object formed: {}" ,storageConfig.toString());
         return StorageServiceFactory.getStorageService(storageConfig);
     }
@@ -234,8 +242,10 @@ public class CertificateGeneratorActor extends BaseActor {
         String type = storeParams.getType();
         if (JsonKey.AZURE.equalsIgnoreCase(type)) {
             return storeParams.getAzureStoreConfig().getContainerName();
-        } else {
+        } else if(JsonKey.AWS.equalsIgnoreCase(type)){
             return storeParams.getAwsStoreConfig().getContainerName();
+        } else {
+            return storeParams.getCephStoreConfig().getContainerName();
         }
     }
 

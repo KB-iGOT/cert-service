@@ -18,6 +18,8 @@ public class StoreConfig {
 
     private AwsStoreConfig awsStoreConfig;
 
+    private CephStoreConfig cephStoreConfig;
+
     private StoreConfig() {
     }
 
@@ -29,11 +31,14 @@ public class StoreConfig {
         } else if (storeParams.containsKey(JsonKey.TYPE)) {
             AwsStoreConfig awsStoreConfig = mapper.convertValue(storeParams.get(JsonKey.AWS), AwsStoreConfig.class);
             setAwsStoreConfig(awsStoreConfig);
+        } else {
+            CephStoreConfig cephStoreConfig = mapper.convertValue(storeParams.get(JsonKey.CEPHS3), CephStoreConfig.class);
+            setCephStoreConfig(cephStoreConfig);
         }
     }
 
     public boolean isCloudStore() {
-        return (azureStoreConfig != null || awsStoreConfig != null);
+        return (azureStoreConfig != null || awsStoreConfig != null || cephStoreConfig != null);
     }
 
     public String getContainerName() {
@@ -42,6 +47,8 @@ public class StoreConfig {
             containerName = azureStoreConfig.getContainerName();
         } else if (JsonKey.AWS.equals(getType())) {
             containerName = awsStoreConfig.getContainerName();
+        } else {
+            containerName = cephStoreConfig.getContainerName();
         }
         return containerName;
     }
@@ -77,6 +84,15 @@ public class StoreConfig {
     public void setAwsStoreConfig(AwsStoreConfig awsStoreConfig) {
         this.awsStoreConfig = awsStoreConfig;
     }
+
+    public CephStoreConfig getCephStoreConfig() {
+        return cephStoreConfig;
+    }
+
+    public void setCephStoreConfig(CephStoreConfig cephStoreConfig) {
+        this.cephStoreConfig = cephStoreConfig;
+    }
+    
 
     @Override
     public String toString() {

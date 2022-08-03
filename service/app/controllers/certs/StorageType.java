@@ -20,7 +20,8 @@ public class StorageType {
 
     public enum CloudStorageType {
         aws,
-        azure
+        azure,
+        cephs3
     }
 
 }

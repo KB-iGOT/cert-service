@@ -121,10 +121,10 @@ public class CertStoreFactory {
     }
 
     /**
-     * to know whether cloud store is azure or aws
+     * to know whether cloud store is azure or aws or cephs3
      *
      * @param storeConfig
-     * @return instance of azureStore or awsStore
+     * @return instance of azureStore or awsStore or cephs3
      */
     public CloudStore getCloudStore(StoreConfig storeConfig) {
         CloudStore cloudStore = null;
@@ -132,6 +132,8 @@ public class CertStoreFactory {
             cloudStore = new AzureStore(storeConfig);
         } else if (JsonKey.AWS.equals(storeConfig.getType())) {
             cloudStore = new AwsStore(storeConfig);
+        } else {
+            cloudStore = new CephStore(storeConfig);
         }
         return cloudStore;
     }

@@ -28,6 +28,10 @@
                     {
                         "id": "cloudStorageType2",
                         "name": "aws"
+                    },
+                    {
+                        "id": "cloudStorageType3",
+                        "name": "cephs3"
                     }
                 ],
                 "index": 1
