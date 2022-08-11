@@ -56,6 +56,7 @@ public class QRStorageParams {
         cephs3Params.put(JsonKey.containerName, System.getenv(JsonKey.PUBLIC_CONTAINER_NAME));
         cephs3Params.put(JsonKey.ACCOUNT, System.getenv(JsonKey.PUBLIC_CEPHS3_STORAGE_KEY));
         cephs3Params.put(JsonKey.KEY, System.getenv(JsonKey.PUBLIC_CEPHS3_STORAGE_SECRET));
+        cephs3Params.put(JsonKey.ENDPOINT, System.getenv(JsonKey.PUBLIC_CEPHS3_STORAGE_ENDPOINT));
         return cephs3Params;
     }
 }

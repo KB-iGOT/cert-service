@@ -132,8 +132,12 @@ public class CertStoreFactory {
             cloudStore = new AzureStore(storeConfig);
         } else if (JsonKey.AWS.equals(storeConfig.getType())) {
             cloudStore = new AwsStore(storeConfig);
-        } else {
+        } else if (JsonKey.CEPHS3.equals(storeConfig.getType())) {
             cloudStore = new CephStore(storeConfig);
+        } else try {
+            throw new Exception("ERR_INVALID_CLOUD_STORAGE Error while initialising cloud storage");
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
         return cloudStore;
     }

@@ -33,6 +33,7 @@ public interface JsonKey {
     String CEPHS3="cephs3";
     String CEPHS3_STORAGE_KEY="CEPHS3_STORAGE_KEY";
     String CEPHS3_STORAGE_SECRET="CEPHS3_STORAGE_SECRET";
+    String CEPHS3_STORAGE_ENDPOINT="CEPHS3_STORAGE_ENDPOINT";
     String SLUG ="sunbird_cert_slug";
     String ACCESS_CODE_LENGTH = "ACCESS_CODE_LENGTH";
     String PATH = "path";
@@ -41,6 +42,7 @@ public interface JsonKey {
     String TYPE = "type";
     String BUCKET_NAME = "BUCKET_NAME";
     String KEY="key";
+    String ENDPOINT="endpoint";
     String ACCOUNT = "account";
     String containerName = "containerName";
     String ENC_SERVICE_URL = "sunbird_cert_enc_service_url";
@@ -111,6 +113,7 @@ public interface JsonKey {
     String PUBLIC_AWS_STORAGE_SECRET = "PUBLIC_AWS_STORAGE_SECRET";
     String PUBLIC_CEPHS3_STORAGE_KEY = "PUBLIC_CEPHS3_STORAGE_KEY";
     String PUBLIC_CEPHS3_STORAGE_SECRET = "PUBLIC_CEPHS3_STORAGE_SECRET";
+    String PUBLIC_CEPHS3_STORAGE_ENDPOINT = "PUBLIC_CEPHS3_STORAGE_ENDPOINT";
     String PUBLIC_CONTAINER_NAME = "PUBLIC_CONTAINER_NAME";
     String VALIDATE_TEMPLATE = "validateTemplate";
     String TEMPLATE_URL = "templateUrl";

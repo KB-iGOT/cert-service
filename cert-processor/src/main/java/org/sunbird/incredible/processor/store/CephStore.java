@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.sunbird.cloud.storage.BaseStorageService;
 import org.sunbird.cloud.storage.factory.StorageConfig;
 import org.sunbird.cloud.storage.factory.StorageServiceFactory;
+
+import scala.Option;
 /**
  * used to upload or downloads files to cephs3
  */
@@ -33,19 +35,19 @@ public class CephStore extends CloudStore {
     @Override
     public String upload(File file, String path) {
         String uploadPath = getPath(path);
-        return cloudStorage.uploadFile(cephStoreConfig.getAwsStoreConfig().getContainerName(), uploadPath, file, false, retryCount);
+        return cloudStorage.uploadFile(cephStoreConfig.getCephStoreConfig().getContainerName(), uploadPath, file, false, retryCount);
     }
 
     @Override
     public void download(String fileName, String localPath) {
-        cloudStorage.downloadFile(cephStoreConfig.getAwsStoreConfig().getContainerName(), fileName, localPath, false);
+        cloudStorage.downloadFile(cephStoreConfig.getCephStoreConfig().getContainerName(), fileName, localPath, false);
     }
 
     private String getPath(String path) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(path);
-        if (StringUtils.isNotBlank(cephStoreConfig.getAzureStoreConfig().getPath())) {
-            stringBuilder.append(cephStoreConfig.getAzureStoreConfig().getPath() + "/");
+        if (StringUtils.isNotBlank(cephStoreConfig.getCephStoreConfig().getPath())) {
+            stringBuilder.append(cephStoreConfig.getCephStoreConfig().getPath() + "/");
         }
         return stringBuilder.toString();
     }
@@ -53,7 +55,7 @@ public class CephStore extends CloudStore {
     @Override
     public String getPublicLink(File file, String uploadPath) {
         String path = getPath(uploadPath);
-        return cloudStorage.upload(cephStoreConfig.getAwsStoreConfig().getContainerName(), path, file, false, retryCount);
+        return cloudStorage.upload(cephStoreConfig.getCephStoreConfig().getContainerName(), path, file, false, retryCount);
     }
 
     @Override
@@ -61,7 +63,8 @@ public class CephStore extends CloudStore {
         if (StringUtils.isNotBlank(cephStoreConfig.getType())) {
             String storageKey = cephStoreConfig.getCephStoreConfig().getAccount();
             String storageSecret = cephStoreConfig.getCephStoreConfig().getKey();
-            StorageConfig storageConfig = new StorageConfig(cephStoreConfig.getType(), storageKey, storageSecret);
+            String storageEndpoint = cephStoreConfig.getCephStoreConfig().getKey();
+            StorageConfig storageConfig = new StorageConfig(cephStoreConfig.getType(), storageKey, storageSecret,Option.apply(storageEndpoint));
             logger.info("StorageParams:init:all storage params initialized for aws block");
             storageService = StorageServiceFactory.getStorageService(storageConfig);
             cloudStorage = new CloudStorage(storageService);

@@ -8,6 +8,8 @@ import org.sunbird.cloud.storage.BaseStorageService;
 import org.sunbird.cloud.storage.factory.StorageConfig;
 import org.sunbird.cloud.storage.factory.StorageServiceFactory;
 
+import scala.Option;
+
 /**
  * used to upload or download files to the azure
  */
@@ -62,7 +64,7 @@ public class AzureStore extends CloudStore {
         if (StringUtils.isNotBlank(azureStoreConfig.getType())) {
             String storageKey = azureStoreConfig.getAzureStoreConfig().getAccount();
             String storageSecret = azureStoreConfig.getAzureStoreConfig().getKey();
-            StorageConfig storageConfig = new StorageConfig(azureStoreConfig.getType(), storageKey, storageSecret);
+            StorageConfig storageConfig = new StorageConfig(azureStoreConfig.getType(), storageKey, storageSecret,Option.apply(null));
             logger.info("StorageParams:init:all storage params initialized for azure block");
             storageService = StorageServiceFactory.getStorageService(storageConfig);
             cloudStorage = new CloudStorage(storageService);

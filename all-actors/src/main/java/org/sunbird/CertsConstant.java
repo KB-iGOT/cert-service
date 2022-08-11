@@ -180,6 +180,10 @@ public class CertsConstant {
         return getPropertyFromEnv(JsonKey.CEPHS3_STORAGE_KEY);
     }
 
+    public String getCephs3StorageEndPoint() {
+        return getPropertyFromEnv(JsonKey.CEPHS3_STORAGE_ENDPOINT);
+    }
+
     public String getSignatoryExtensionUrl() {
         return String.format("%s/%s/%s", BASE_PATH, SIGNATORY_EXTENSION, "context.json");
     }
@@ -240,6 +244,7 @@ public class CertsConstant {
         cephs3Params.put(JsonKey.containerName, getCONTAINER_NAME());
         cephs3Params.put(JsonKey.ACCOUNT, getCephs3StorageKey());
         cephs3Params.put(JsonKey.KEY, getCephs3StorageSecret());
+        cephs3Params.put(JsonKey.ENDPOINT, getCephs3StorageEndPoint());
         return cephs3Params;
     }
 

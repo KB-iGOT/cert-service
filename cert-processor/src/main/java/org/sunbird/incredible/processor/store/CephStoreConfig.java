@@ -14,6 +14,8 @@ public class CephStoreConfig {
 
     private String key;
 
+    private String endpoint;
+
     public CephStoreConfig() {
     }
 
@@ -49,6 +51,13 @@ public class CephStoreConfig {
         this.key = key;
     }
 
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.key = endpoint;
+    }
 
     @Override
     public String toString() {

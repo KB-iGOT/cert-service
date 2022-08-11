@@ -31,6 +31,8 @@ import org.sunbird.request.Request;
 import org.sunbird.response.CertificateResponse;
 import org.sunbird.response.CertificateResponseV1;
 import org.sunbird.response.Response;
+
+import scala.Option;
 import scala.Some;
 
 import java.io.File;
@@ -105,12 +107,17 @@ public class CertificateGeneratorActor extends BaseActor {
     private BaseStorageService getStorageService() {
         StorageConfig storageConfig = null;
         if (certVar.getCloudStorageType().equalsIgnoreCase(certVar.getAzureStorage())) {
-            storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAzureStorageKey(), certVar.getAzureStorageSecret());
+            storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAzureStorageKey(), certVar.getAzureStorageSecret(), Option.apply(null));
         } else if(certVar.getCloudStorageType().equalsIgnoreCase(certVar.getAwsStorage())){
-            storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAwsStorageKey(), certVar.getAwsStorageSecret());
-        } else {
-            storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getCephs3StorageKey(), certVar.getCephs3StorageSecret());
-        } 
+            storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAwsStorageKey(), certVar.getAwsStorageSecret(), Option.apply(null));
+        } else if(certVar.getCloudStorageType().equalsIgnoreCase(certVar.getCephs3Storage())){
+            storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getCephs3StorageKey(), certVar.getCephs3StorageSecret(),Option.apply(certVar.getCephs3StorageEndPoint()));
+        } else
+            try {
+                throw new BaseException(IResponseMessage.INTERNAL_ERROR, "Error while initialising cloud storage", ResponseCode.SERVER_ERROR.getCode());
+            } catch (BaseException e) {
+                logger.error(null,"Error while initialising cloud storage", e);
+            }
         //StorageConfig storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAzureStorageKey(), certVar.getAzureStorageSecret());
         logger.info(null, "CertificateGeneratorActor:getStorageService:storage object formed: {}" ,storageConfig.toString());
         return StorageServiceFactory.getStorageService(storageConfig);
@@ -244,9 +251,15 @@ public class CertificateGeneratorActor extends BaseActor {
             return storeParams.getAzureStoreConfig().getContainerName();
         } else if(JsonKey.AWS.equalsIgnoreCase(type)){
             return storeParams.getAwsStoreConfig().getContainerName();
-        } else {
+        } else if(JsonKey.CEPHS3.equalsIgnoreCase(type)){
             return storeParams.getCephStoreConfig().getContainerName();
+        } else 
+        try {
+            throw new BaseException(IResponseMessage.INTERNAL_ERROR, "Error while fetching contain", ResponseCode.SERVER_ERROR.getCode());
+        } catch (BaseException e) {
+            logger.error(null,"Error while fetching contain", e);
         }
+        return type;
     }
 
     private Map<String, Object> uploadJson(String fileName, ICertStore certStore, String cloudPath) throws IOException {
