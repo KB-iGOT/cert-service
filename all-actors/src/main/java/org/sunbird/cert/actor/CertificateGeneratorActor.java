@@ -106,6 +106,9 @@ public class CertificateGeneratorActor extends BaseActor {
 
     private BaseStorageService getStorageService() {
         StorageConfig storageConfig = null;
+        System.out.println("Storage Type =="+certVar.getCloudStorageType());
+        System.out.println("Azure Storage =="+certVar.getAzureStorage());
+        
         if (certVar.getCloudStorageType().equalsIgnoreCase(certVar.getAzureStorage())) {
             storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAzureStorageKey(), certVar.getAzureStorageSecret(), Option.apply(null));
         } else if(certVar.getCloudStorageType().equalsIgnoreCase(certVar.getAwsStorage())){
