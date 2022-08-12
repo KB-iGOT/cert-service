@@ -249,14 +249,14 @@ public class CertsConstant {
     }
 
     public String getAzureStorage() {
-        return getPropertyFromEnv(JsonKey.AZURE);
+        return JsonKey.AZURE;
     }
 
     public String getAwsStorage() {
-        return getPropertyFromEnv(JsonKey.AWS);
+        return JsonKey.AWS;
     }
 
     public String getCephs3Storage() {
-        return getPropertyFromEnv(JsonKey.CEPHS3);
+        return JsonKey.CEPHS3;
     }
 }
