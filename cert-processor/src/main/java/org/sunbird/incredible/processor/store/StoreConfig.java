@@ -18,6 +18,8 @@ public class StoreConfig {
 
     private AwsStoreConfig awsStoreConfig;
 
+    private CephStoreConfig cephStoreConfig;
+
     private StoreConfig() {
     }
 
@@ -26,9 +28,16 @@ public class StoreConfig {
         if (storeParams.containsKey(JsonKey.AZURE)) {
             AzureStoreConfig azureStoreConfig = mapper.convertValue(storeParams.get(JsonKey.AZURE), AzureStoreConfig.class);
             setAzureStoreConfig(azureStoreConfig);
-        } else if (storeParams.containsKey(JsonKey.TYPE)) {
+        } else if (storeParams.containsKey(JsonKey.AWS)) {
             AwsStoreConfig awsStoreConfig = mapper.convertValue(storeParams.get(JsonKey.AWS), AwsStoreConfig.class);
             setAwsStoreConfig(awsStoreConfig);
+        } else if(storeParams.containsKey(JsonKey.CEPHS3)){
+            CephStoreConfig cephStoreConfig = mapper.convertValue(storeParams.get(JsonKey.CEPHS3), CephStoreConfig.class);
+            setCephStoreConfig(cephStoreConfig);
+        } else try {
+            throw new Exception("ERR_INVALID_CLOUD_STORAGE Error while initialising cloud storage");
+        } catch (Exception e) {
+            
         }
     }
 
@@ -42,6 +51,12 @@ public class StoreConfig {
             containerName = azureStoreConfig.getContainerName();
         } else if (JsonKey.AWS.equals(getType())) {
             containerName = awsStoreConfig.getContainerName();
+        } else if(JsonKey.CEPHS3.equals(getType())){
+            containerName = cephStoreConfig.getContainerName();
+        }else try {
+            throw new Exception("ERR_INVALID_CLOUD_STORAGE Error while initialising cloud storage");
+        } catch (Exception e) {
+            
         }
         return containerName;
     }
@@ -76,6 +91,14 @@ public class StoreConfig {
 
     public void setAwsStoreConfig(AwsStoreConfig awsStoreConfig) {
         this.awsStoreConfig = awsStoreConfig;
+    }
+
+    public CephStoreConfig getCephStoreConfig() {
+        return cephStoreConfig;
+    }
+
+    public void setCephStoreConfig(CephStoreConfig cephStoreConfig) {
+        this.cephStoreConfig = cephStoreConfig;
     }
 
     @Override

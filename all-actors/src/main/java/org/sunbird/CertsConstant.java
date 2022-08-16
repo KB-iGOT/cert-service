@@ -172,6 +172,18 @@ public class CertsConstant {
         return getPropertyFromEnv(JsonKey.AWS_STORAGE_KEY);
     }
 
+    public String getCephs3StorageSecret() {
+        return getPropertyFromEnv(JsonKey.CEPHS3_STORAGE_SECRET);
+    }
+
+    public String getCephs3StorageKey() {
+        return getPropertyFromEnv(JsonKey.CEPHS3_STORAGE_KEY);
+    }
+
+    public String getCephs3StorageEndPoint() {
+        return getPropertyFromEnv(JsonKey.CEPHS3_STORAGE_ENDPOINT);
+    }
+
     public String getSignatoryExtensionUrl() {
         return String.format("%s/%s/%s", BASE_PATH, SIGNATORY_EXTENSION, "context.json");
     }
@@ -222,5 +234,26 @@ public class CertsConstant {
         awsParams.put(JsonKey.ACCOUNT, getAwsStorageKey());
         awsParams.put(JsonKey.KEY, getAwsStorageSecret());
         return awsParams;
+    }
+
+    private Map<String, String> getCephs3Params() {
+        Map<String, String> cephs3Params = new HashMap<>();
+        cephs3Params.put(JsonKey.containerName, getCONTAINER_NAME());
+        cephs3Params.put(JsonKey.ACCOUNT, getCephs3StorageKey());
+        cephs3Params.put(JsonKey.KEY, getCephs3StorageSecret());
+        cephs3Params.put(JsonKey.ENDPOINT, getCephs3StorageEndPoint());
+        return cephs3Params;
+    }
+
+    public String getAzureStorage() {
+        return JsonKey.AZURE;
+    }
+
+    public String getAwsStorage() {
+        return JsonKey.AWS;
+    }
+
+    public String getCephs3Storage() {
+        return JsonKey.CEPHS3;
     }
 }
