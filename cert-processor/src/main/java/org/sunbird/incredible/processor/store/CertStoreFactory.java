@@ -124,7 +124,7 @@ public class CertStoreFactory {
      * to know whether cloud store is azure or aws
      *
      * @param storeConfig
-     * @return instance of azureStore or awsStore
+     * @return instance of azureStore or awsStore or cephs3
      */
     public CloudStore getCloudStore(StoreConfig storeConfig) {
         CloudStore cloudStore = null;
@@ -132,6 +132,12 @@ public class CertStoreFactory {
             cloudStore = new AzureStore(storeConfig);
         } else if (JsonKey.AWS.equals(storeConfig.getType())) {
             cloudStore = new AwsStore(storeConfig);
+        } else if (JsonKey.CEPHS3.equals(storeConfig.getType())) {
+            cloudStore = new CephStore(storeConfig);
+        } else try {
+            throw new Exception("ERR_INVALID_CLOUD_STORAGE Error while initialising cloud storage");
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
         return cloudStore;
     }
