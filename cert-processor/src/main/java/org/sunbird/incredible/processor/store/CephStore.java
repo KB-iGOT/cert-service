@@ -64,7 +64,7 @@ public class CephStore extends CloudStore {
             String storageKey = cephStoreConfig.getCephStoreConfig().getAccount();
             String storageSecret = cephStoreConfig.getCephStoreConfig().getKey();
             String storageEndpoint = cephStoreConfig.getCephStoreConfig().getKey();
-            StorageConfig storageConfig = new StorageConfig(cephStoreConfig.getType(), storageKey, storageSecret,Option.apply(storageEndpoint));
+            StorageConfig storageConfig = new StorageConfig(cephStoreConfig.getType(), storageKey, storageSecret,Option.apply(storageEndpoint), Option.empty());
             logger.info("StorageParams:init:all storage params initialized for aws block");
             storageService = StorageServiceFactory.getStorageService(storageConfig);
             cloudStorage = new CloudStorage(storageService);

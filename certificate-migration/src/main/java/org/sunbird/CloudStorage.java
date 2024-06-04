@@ -38,6 +38,11 @@ public class CloudStorage {
             String storageSecret = System.getenv("CEPHS3_STORAGE_SECRET");
             String endPoint = System.getenv("CEPHS3_STORAGE_ENDPOINT");
             storageService = StorageServiceFactory.getStorageService(new StorageConfig(cloudStoreType, storageKey, storageSecret,Option.apply(endPoint)));
+        } else if (StringUtils.equalsIgnoreCase(cloudStoreType, "gcloud")) {
+            String storageKey = System.getenv("GCP_STORAGE_KEY");
+            String storageSecret = System.getenv("GCP_STORAGE_SECRET");
+            String endPoint = System.getenv("GCP_STORAGE_ENDPOINT");
+            storageService = StorageServiceFactory.getStorageService(new StorageConfig(cloudStoreType, storageKey, storageSecret,Option.apply(endPoint)));
         } else try {
             throw new Exception("ERR_INVALID_CLOUD_STORAGE Error while initialising cloud storage");
         } catch (Exception e) {

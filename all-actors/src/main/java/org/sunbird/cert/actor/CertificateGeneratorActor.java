@@ -52,6 +52,7 @@ import java.util.Map;
 public class CertificateGeneratorActor extends BaseActor {
     private static CertsConstant certVar = new CertsConstant();
     private static ObjectMapper mapper = new ObjectMapper();
+    private BaseStorageService storageService = null;
     String directory = "conf/";
     static {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -72,13 +73,12 @@ public class CertificateGeneratorActor extends BaseActor {
     }
 
     private void generateSignUrl(Request request) {
-      BaseStorageService storageService = null;
+
         try {
             logger.info("generateSignUrl:generate request got : {}", request.getRequest());
-            storageService = getStorageService();
             String uri = UrlManager.getContainerRelativePath((String) request.getRequest().get(JsonKey.PDF_URL));
             logger.info("generateSignUrl:generate sign url method called for uri: {}", uri);
-            String signUrl = storageService.getSignedURL(certVar.getCONTAINER_NAME(), uri, Some.apply(getTimeoutInSeconds()),
+            String signUrl = getStorageService().getSignedURL(certVar.getCONTAINER_NAME(), uri, Some.apply(getTimeoutInSeconds()),
                     Some.apply("r"));
             logger.info("generateSignUrl:signedUrl got: {}",signUrl);
             Response response = new Response();
@@ -91,37 +91,33 @@ public class CertificateGeneratorActor extends BaseActor {
             response.put(JsonKey.RESPONSE, "failure");
             response.put(JsonKey.SIGNED_URL, "");
             sender().tell(response, self());
-        } finally {
-          try {
-            if (null != storageService) {
-              storageService.closeContext();
-            }
-          } catch (Exception ex) {
-            logger.info("CertificateGeneratorActor:generateSignUrl : Exception occurred while closing connection");
-          }
         }
 
     }
 
 
     private BaseStorageService getStorageService() {
-        StorageConfig storageConfig = null;
-
-        if (certVar.getCloudStorageType().equalsIgnoreCase(certVar.getAzureStorage())) {
-            storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAzureStorageKey(), certVar.getAzureStorageSecret(), Option.apply(null));
-        } else if(certVar.getCloudStorageType().equalsIgnoreCase(certVar.getAwsStorage())){
-            storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAwsStorageKey(), certVar.getAwsStorageSecret(), Option.apply(null));
-        } else if(certVar.getCloudStorageType().equalsIgnoreCase(certVar.getCephs3Storage())){
-            storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getCephs3StorageKey(), certVar.getCephs3StorageSecret(),Option.apply(certVar.getCephs3StorageEndPoint()));
-        } else
-            try {
-                throw new BaseException(IResponseMessage.INTERNAL_ERROR, "Error while initialising cloud storage", ResponseCode.SERVER_ERROR.getCode());
-            } catch (BaseException e) {
-                logger.error("Error while initialising cloud storage. : {}", e.getMessage());
-            }
-        //StorageConfig storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAzureStorageKey(), certVar.getAzureStorageSecret());
-        logger.info("CertificateGeneratorActor:getStorageService:storage object formed: {}" ,storageConfig.toString());
-        return StorageServiceFactory.getStorageService(storageConfig);
+        if(storageService == null) {
+            StorageConfig storageConfig = null;
+            if (certVar.getCloudStorageType().equalsIgnoreCase(certVar.getAzureStorage())) {
+                storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAzureStorageKey(), certVar.getAzureStorageSecret(), Option.apply(null), Option.empty());
+            } else if (certVar.getCloudStorageType().equalsIgnoreCase(certVar.getAwsStorage())) {
+                storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAwsStorageKey(), certVar.getAwsStorageSecret(), Option.apply(null), Option.empty());
+            } else if (certVar.getCloudStorageType().equalsIgnoreCase(certVar.getCephs3Storage())) {
+                storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getCephs3StorageKey(), certVar.getCephs3StorageSecret(), Option.apply(certVar.getCephs3StorageEndPoint()), Option.empty());
+            } else if (certVar.getCloudStorageType().equalsIgnoreCase(certVar.getGCPStorage())) {
+                storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getGCPStorageKey(), certVar.getGCPStorageSecret(), Option.apply(certVar.getGCPStorageEndPoint()), Option.empty());
+            } else
+                try {
+                    throw new BaseException(IResponseMessage.INTERNAL_ERROR, "Error while initialising cloud storage", ResponseCode.SERVER_ERROR.getCode());
+                } catch (BaseException e) {
+                    logger.error("Error while initialising cloud storage. : {}", e.getMessage());
+                }
+            //StorageConfig storageConfig = new StorageConfig(certVar.getCloudStorageType(), certVar.getAzureStorageKey(), certVar.getAzureStorageSecret());
+            logger.info("CertificateGeneratorActor:getStorageService:storage object formed: {}", storageConfig.toString());
+            storageService = StorageServiceFactory.getStorageService(storageConfig);
+        }
+        return storageService;
     }
 
     private int getTimeoutInSeconds() {
@@ -254,7 +250,9 @@ public class CertificateGeneratorActor extends BaseActor {
             return storeParams.getAwsStoreConfig().getContainerName();
         } else if(JsonKey.CEPHS3.equalsIgnoreCase(type)){
             return storeParams.getCephStoreConfig().getContainerName();
-        } else 
+        } else if(JsonKey.GCP.equalsIgnoreCase(type)){
+            return storeParams.getCloudStoreConfig().getContainerName();
+        } else
         try {
             throw new BaseException(IResponseMessage.INTERNAL_ERROR, "Error while fetching contain", ResponseCode.SERVER_ERROR.getCode());
         } catch (BaseException e) {

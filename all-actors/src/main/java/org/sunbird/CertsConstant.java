@@ -188,6 +188,17 @@ public class CertsConstant {
         return String.format("%s/%s/%s", BASE_PATH, SIGNATORY_EXTENSION, "context.json");
     }
 
+    public String getGCPStorageSecret() {
+        return getPropertyFromEnv(JsonKey.GCP_STORAGE_SECRET);
+    }
+
+    public String getGCPStorageKey() {
+        return getPropertyFromEnv(JsonKey.GCP_STORAGE_KEY);
+    }
+
+    public String getGCPStorageEndPoint() {
+        return getPropertyFromEnv(JsonKey.GCP_STORAGE_ENDPOINT);
+    }
 
     private static String getSlugFormEnv() {
         String slug = getPropertyFromEnv(JsonKey.SLUG);
@@ -245,6 +256,16 @@ public class CertsConstant {
         return cephs3Params;
     }
 
+    private Map<String, String> getGCPParams() {
+        Map<String, String> gcpParams = new HashMap<>();
+        gcpParams.put(JsonKey.containerName, getCONTAINER_NAME());
+        gcpParams.put(JsonKey.ACCOUNT, getGCPStorageKey());
+        gcpParams.put(JsonKey.KEY, getGCPStorageSecret());
+        gcpParams.put(JsonKey.ENDPOINT, getGCPStorageEndPoint());
+        return gcpParams;
+    }
+
+
     public String getAzureStorage() {
         return JsonKey.AZURE;
     }
@@ -256,4 +277,9 @@ public class CertsConstant {
     public String getCephs3Storage() {
         return JsonKey.CEPHS3;
     }
+
+    public String getGCPStorage() {
+        return JsonKey.GCP;
+    }
+
 }

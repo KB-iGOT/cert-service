@@ -1,6 +1,7 @@
 package org.sunbird;
 
 import org.apache.commons.lang3.StringUtils;
+import org.mortbay.util.ajax.JSON;
 import org.sunbird.incredible.processor.JsonKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,9 @@ public class QRStorageParams {
             if (type.equals(JsonKey.CEPHS3)) {
                 storeParams.put(JsonKey.CEPHS3, getCephs3Params());
             }
+            if (type.equals(JsonKey.GCP)) {
+                storeParams.put(JsonKey.GCP, getGCPParams());
+            }
         }
         return storeParams;
     }
@@ -58,5 +62,14 @@ public class QRStorageParams {
         cephs3Params.put(JsonKey.KEY, System.getenv(JsonKey.PUBLIC_CEPHS3_STORAGE_SECRET));
         cephs3Params.put(JsonKey.ENDPOINT, System.getenv(JsonKey.PUBLIC_CEPHS3_STORAGE_ENDPOINT));
         return cephs3Params;
+    }
+
+    private Map<String, String> getGCPParams() {
+        Map<String, String> gcpParams = new HashMap<>();
+        gcpParams.put(JsonKey.containerName, System.getenv(JsonKey.PUBLIC_CONTAINER_NAME));
+        gcpParams.put(JsonKey.ACCOUNT, System.getenv(JsonKey.GCP_STORAGE_KEY));
+        gcpParams.put(JsonKey.KEY, System.getenv(JsonKey.GCP_STORAGE_SECRET));
+        gcpParams.put(JsonKey.ENDPOINT, System.getenv(JsonKey.GCP_STORAGE_ENDPOINT));
+        return gcpParams;
     }
 }

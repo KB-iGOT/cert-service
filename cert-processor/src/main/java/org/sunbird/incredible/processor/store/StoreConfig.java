@@ -20,6 +20,8 @@ public class StoreConfig {
 
     private CephStoreConfig cephStoreConfig;
 
+    private CloudStoreConfig cloudStoreConfig;
+
     private StoreConfig() {
     }
 
@@ -34,6 +36,9 @@ public class StoreConfig {
         } else if(storeParams.containsKey(JsonKey.CEPHS3)){
             CephStoreConfig cephStoreConfig = mapper.convertValue(storeParams.get(JsonKey.CEPHS3), CephStoreConfig.class);
             setCephStoreConfig(cephStoreConfig);
+        } else if(storeParams.containsKey(JsonKey.GCP)){
+            CloudStoreConfig cloudStoreConfig = mapper.convertValue(storeParams.get(JsonKey.GCP), CloudStoreConfig.class);
+            setCloudStoreConfig(cloudStoreConfig);
         } else try {
             throw new Exception("ERR_INVALID_CLOUD_STORAGE Error while initialising cloud storage");
         } catch (Exception e) {
@@ -53,7 +58,9 @@ public class StoreConfig {
             containerName = awsStoreConfig.getContainerName();
         } else if(JsonKey.CEPHS3.equals(getType())){
             containerName = cephStoreConfig.getContainerName();
-        }else try {
+        } else if(JsonKey.GCP.equals(getType())){
+            containerName = cloudStoreConfig.getContainerName();
+        } else try {
             throw new Exception("ERR_INVALID_CLOUD_STORAGE Error while initialising cloud storage");
         } catch (Exception e) {
             
@@ -75,6 +82,14 @@ public class StoreConfig {
 
     public void setCloudRetryCount(String cloudRetryCount) {
         this.cloudRetryCount = cloudRetryCount;
+    }
+
+    public CloudStoreConfig getCloudStoreConfig() {
+        return cloudStoreConfig;
+    }
+
+    public void setCloudStoreConfig(CloudStoreConfig cloudStoreConfig) {
+        this.cloudStoreConfig = cloudStoreConfig;
     }
 
     public AzureStoreConfig getAzureStoreConfig() {
