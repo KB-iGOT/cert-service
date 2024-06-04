@@ -68,7 +68,7 @@ public class QRStorageParams {
         Map<String, String> gcpParams = new HashMap<>();
         gcpParams.put(JsonKey.containerName, System.getenv(JsonKey.PUBLIC_CONTAINER_NAME));
         gcpParams.put(JsonKey.ACCOUNT, System.getenv(JsonKey.GCP_STORAGE_KEY));
-        gcpParams.put(JsonKey.KEY, System.getenv(JsonKey.GCP_STORAGE_SECRET));
+        gcpParams.put(JsonKey.KEY, System.getenv(JsonKey.GCP_STORAGE_SECRET).replace("\\n", "\n"));
         gcpParams.put(JsonKey.ENDPOINT, System.getenv(JsonKey.GCP_STORAGE_ENDPOINT));
         return gcpParams;
     }

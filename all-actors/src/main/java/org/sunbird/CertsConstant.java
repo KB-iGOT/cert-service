@@ -189,7 +189,7 @@ public class CertsConstant {
     }
 
     public String getGCPStorageSecret() {
-        return getPropertyFromEnv(JsonKey.GCP_STORAGE_SECRET);
+        return getPropertyFromEnv(JsonKey.GCP_STORAGE_SECRET).replace("\\n", "\n");
     }
 
     public String getGCPStorageKey() {
